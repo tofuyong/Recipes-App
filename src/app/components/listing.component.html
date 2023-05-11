@@ -1,0 +1,65 @@
+<h2>What to cook for dinner?</h2>
+
+<h3>Search Recipes by Ingredients</h3>
+
+<form [formGroup]="form" (ngSubmit)="findRecipesByIncludedIng()">
+  <div formArrayName="ingredients">
+    <div *ngFor="let ingredient of ingredients.controls; let i = index" [formGroupName]="i">
+      <p>Ingredient {{ i+1 }}:</p>
+      <input type="text" size="28" formControlName="name">
+      <button type="button" (click)="removeIngredient(i)">X</button>
+      <br><br>
+    </div>
+  </div>
+  <br>
+
+  <button mat-raised-button type="button" (click)="addIngredient()">Add Ingredients</button>
+  <button mat-raised-button type="submit">Find Recipes</button>
+ 
+</form>
+
+<br><hr>
+
+<div *ngIf="recipes; else noRecipe">
+  <h3>Recipes containing: <button mat-raised-button *ngFor="let ing of ingredientNames">{{ ing | titlecase }}</button></h3>
+  <ng-container *ngIf="recipesFound; else noRecipesFound">
+    <mat-paginator
+      [hidePageSize]="false"
+      [showFirstLastButtons]="false"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage"
+      [length]="recipes.length"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+      class="top-paginator"
+    ></mat-paginator>
+    <div *ngFor="let recipe of recipes | slice: (currentPage)*pageSize : (currentPage+1)*pageSize">
+      <a [routerLink]="['/details', recipe.id]">
+        Recipe ID: {{ recipe.id }} <b>{{ recipe.title }}</b> 
+      </a>
+      <br>
+        <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+      <br><br>
+    </div>
+    <mat-paginator
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage"
+      [length]="recipes.length"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+      class="bottom-paginator"
+    ></mat-paginator>
+  </ng-container>
+</div>
+
+<ng-template #noRecipe>
+  <p><i>No recipes at the moment</i></p>
+</ng-template>
+
+<ng-template #noRecipesFound>
+  <p><i>No recipes found that contain all the above ingredients</i></p>
+</ng-template>
+
+

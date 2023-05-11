@@ -1,0 +1,11 @@
+<div *ngIf="recipeDetails">
+    <h2>{{ recipeDetails.title }} </h2>
+
+    <img src="{{ recipeDetails.image }}" alt="{{ recipeDetails.title }}">
+
+    <p>Ready in: {{ recipeDetails.readyInMinutes }} minutes</p>
+    <p [innerHTML]="getInstructions()"></p>
+
+</div>
+
+<button type="button" [routerLink]="['/']">Back</button>
